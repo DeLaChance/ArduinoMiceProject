@@ -31,7 +31,7 @@ const int BUTTON_2 = 2; // input 2
 const int DELAY_SHORT_MILLIS = 2000; // give a delay of 2 seconds
 const int DELAY_MEDIUM_MILLIS = 4000; // give a delay of 4 seconds
 const int DELAY_LONG_MILLIS = 6000; // give a delay of 6 seconds
-const int MAX_LOOP_ITERATIONS = 2; // the maximum number of repeat in the loop is 5 times
+const int MAX_LOOP_ITERATIONS = 5; // the maximum number of repeat in the loop is 5 times
 const int COMPLETE_LOOP_MILLIS = 2 * DELAY_LONG_MILLIS + 2 * DELAY_SHORT_MILLIS;
 const int PRINT_RATE_MILLIS = 2000;
 
@@ -40,8 +40,8 @@ int loopCount = 0; // to declare the number of loop
 unsigned long currentLoopStartTime = 1; // to declare the current loop start time
 LoopState loopState = NOT_STARTED; // to declare the loop state
 
-bool led3IsOn = false; // to declare the variable while LED 3 is on
-int led3TurnedOnTime = 1; // to declare the timing while LED 3 is on.
+bool greenLightIsOn = false; // to declare the variable while LED 3 is on
+int greenLightTurnedOnTime = 1; // to declare the timing while LED 3 is on.
 
 unsigned long buttonOnePressTime = 0;
 unsigned long timeSinceProgramStart = 0;
@@ -51,6 +51,7 @@ int redLightTurnedOnCount = 0;
 int yellowLightTurnedOnCount = 0;
 bool redLightIsOn = false;
 bool yellowLightIsOn = false;
+bool lastLightWasRed = false;
 
 // Program code:
 void setup() {
@@ -122,17 +123,26 @@ void loop() {
             currentLoopStartTime = millis(); // and the current loop start time begins again and is set to miliseconds
         }
 
-        if (buttonIsPressed(BUTTON_2) && timeInCurrentLoop <= DELAY_MEDIUM_MILLIS) { // if button 2 is pressed and the time in current loop is below 4 seconds
-            turnLedOn(LED3); // green LED is on
-            led3IsOn = true; // green LED on is true
-            led3TurnedOnTime = timeInCurrentLoop; // the time when green LED is on is now the time in current loop
+        if (lastLightWasRed == true) { // Last time a red or yellow light could be turned on, a red light was chosen.
+
+            if (buttonIsPressed(BUTTON_2)) { // if button 2 is pressed 
+                if ((timeInCurrentLoop <= DELAY_MEDIUM_MILLIS) || // the time in current loop is below 4 seconds
+                        (timeInCurrentLoop >= ((DELAY_SHORT_MILLIS + DELAY_LONG_MILLIS) && timeInCurrentLoop <= (DELAY_SHORT_MILLIS + DELAY_LONG_MILLIS + DELAY_MEDIUM_MILLIS)))
+                    ) { // or between 8 and 12 seconds 
+                    
+                    turnLedOn(LED3); // green LED is on
+                    greenLightIsOn = true; // green LED on is true
+                    greenLightTurnedOnTime = timeInCurrentLoop; // the time when green LED is on is now the time in current loop
+                }
+            }
         }
 
-        if (led3IsOn == true && (timeInCurrentLoop - led3TurnedOnTime) >= DELAY_SHORT_MILLIS) { // when the green LED is on and the time in current loop substracted with the time when green LED is on is bigger than 2 seconds
+        if (greenLightIsOn == true && (timeInCurrentLoop - greenLightTurnedOnTime) >= DELAY_SHORT_MILLIS) { // when the green LED is on and the time in current loop substracted with the time when green LED is on is bigger than 2 seconds
             turnLedOff(LED3); // green LED is off
-            led3IsOn = false; // green LED on is false
-            led3TurnedOnTime =  1; // the time when green LED is on goes back to the original
-        }         
+            greenLightIsOn = false; // green LED on is false
+            greenLightTurnedOnTime =  1; // the time when green LED is on goes back to the original
+        }        
+    
     }
 
     if (loopCount == MAX_LOOP_ITERATIONS) { // if the number of loop reaches the maximum number of loop repeat
@@ -166,12 +176,14 @@ void turnRedLedOn() {
     turnLedOn(LED1); 
     redLightTurnedOnCount += 1; // increase the count of red
     redLightIsOn = true;
+    lastLightWasRed = true;
 }
 
 void turnYellowLedOn() {
     turnLedOn(LED2); 
     yellowLightTurnedOnCount += 1; // increase the count of yellow
     yellowLightIsOn = true;
+    lastLightWasRed = false;
 }
 
 void turnLedOn(int ledNumber) { // when LED x is on
