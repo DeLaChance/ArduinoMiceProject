@@ -31,7 +31,7 @@ const int BUTTON_2 = 2; // input 2
 const int DELAY_SHORT_MILLIS = 2000; // give a delay of 2 seconds
 const int DELAY_MEDIUM_MILLIS = 4000; // give a delay of 4 seconds
 const int DELAY_LONG_MILLIS = 6000; // give a delay of 6 seconds
-const int MAX_LOOP_ITERATIONS = 5; // the maximum number of repeat in the loop is 5 times
+const int MAX_LOOP_ITERATIONS = 2; // the maximum number of repeat in the loop is 5 times
 const int COMPLETE_LOOP_MILLIS = 2 * DELAY_LONG_MILLIS + 2 * DELAY_SHORT_MILLIS;
 const int PRINT_RATE_MILLIS = 2000;
 
@@ -200,7 +200,10 @@ bool loopHasStarted() {
 
 void printValuesToSerial() {
 
-    if (loopState == PRE_LOOP_WAIT) {
+    if (loopState == NOT_STARTED) {
+        Serial.println("Button press"); // Then these words are printed 
+    } else if (loopState == PRE_LOOP_WAIT) {
+        Serial.println("Loop will start");
         Serial.println("Time in millisecs,Red LED value,Yellow LED value,Green LED value,Button 2 value"); // Then these words are printed 
     } else { 
         int redLedValue = digitalRead(LED1); // to read the red LED value from pin 6
@@ -236,4 +239,5 @@ void resetLoop() { // when the system is reset, all LEDs are off
     
     redLightIsOn = false;
     yellowLightIsOn = false;    
+    loopCount = 0;
 }
