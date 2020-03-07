@@ -31,7 +31,7 @@ const int BUTTON_2 = 2; // input 2
 const int DELAY_SHORT_MILLIS = 2000; // give a delay of 2 seconds
 const int DELAY_MEDIUM_MILLIS = 4000; // give a delay of 4 seconds
 const int DELAY_LONG_MILLIS = 6000; // give a delay of 6 seconds
-const int MAX_LOOP_ITERATIONS = 4; // the maximum number of repeat in the loop is 5 times
+const int MAX_LOOP_ITERATIONS = 5; // the maximum number of repeat in the loop is 5 times
 const int COMPLETE_LOOP_MILLIS = 2 * DELAY_LONG_MILLIS + 2 * DELAY_SHORT_MILLIS;
 const int PRINT_RATE_MILLIS = 2000;
 
@@ -47,6 +47,11 @@ unsigned long buttonOnePressTime = 0;
 unsigned long timeSinceProgramStart = 0;
 unsigned long lastPrintTime = 0;
 
+int redLightTurnedOnCount = 0;
+int yellowLightTurnedOnCount = 0;
+bool redLightIsOn = false;
+bool yellowLightIsOn = false;
+
 // Program code:
 void setup() {
 
@@ -58,7 +63,13 @@ void setup() {
     pinMode(BUTTON_1, INPUT); // set button 1 as an input 1
     pinMode(BUTTON_2, INPUT); // set button 2 as an input 2
 
-    reset(); // reset all conditions
+    // if analog input pin 0 is unconnected, random analog
+    // noise will cause the call to randomSeed() to generate
+    // different seed numbers each time the sketch runs.
+    // randomSeed() will then shuffle the random function.
+    randomSeed(analogRead(0));
+
+    resetLoop(); // reset all conditions
 }
 
 void loop() {
@@ -86,22 +97,22 @@ void loop() {
         int timeInCurrentLoop = (timeSinceProgramStart - currentLoopStartTime); // then the time in current loop is calculated from the number of current miliseconds substracted with the miliseconds of the starting loop
 
         if (loopState == LOOP_START) {
-            turnLedOn(LED1); // red LED is on
+            turnRedOrYellowLedOn(); // red LED is on
             loopState = FIRST_LIGHT_ON;        
         }
 
         if (loopState == FIRST_LIGHT_ON && timeInCurrentLoop >= DELAY_SHORT_MILLIS) { 
-            turnLedOff(LED1); // red LED is off 
+            turnRedOrYellowLightOff();
             loopState = FIRST_WAIT; // and the loop state switches to 'first wait'. The first wait lasts for 6 seconds.
         }
 
         if (loopState == FIRST_WAIT && timeInCurrentLoop >= (DELAY_LONG_MILLIS + DELAY_SHORT_MILLIS)) { // when the loop state is 'first wait' and the time in current loop is bigger than 8 seconds
-            turnLedOn(LED2); // yellow LED is on
+            turnRedOrYellowLedOn(); // yellow LED is on
             loopState = SECOND_LIGHT_ON; // and the loop state switches to 'yellow light on'. The yellow LED is on for 2 seconds
         }
 
         if (loopState == SECOND_LIGHT_ON && timeInCurrentLoop >= (DELAY_LONG_MILLIS + 2*DELAY_SHORT_MILLIS)) { // when the loop state is 'second light on' and the time in current loop is bigger than 10 seconds
-            turnLedOff(LED2); // yellow LED is off
+            turnRedOrYellowLightOff();
             loopState = SECOND_WAIT;
         }
 
@@ -125,7 +136,7 @@ void loop() {
     }
 
     if (loopCount == MAX_LOOP_ITERATIONS) { // if the number of loop reaches the maximum number of loop repeat
-        loopState = NOT_STARTED; // then the state of loop is over
+        resetLoop();
     }
 }
 
@@ -134,8 +145,49 @@ bool buttonIsPressed(int buttonNumber) { // when button x is pressed
     return buttonState == HIGH;
 }
 
+void turnRedOrYellowLedOn() {
+
+    if (redLightTurnedOnCount == MAX_LOOP_ITERATIONS) {
+        turnYellowLedOn(); // turn on yellow led, as red led has been turned on max number of times.
+    } else if (yellowLightTurnedOnCount == MAX_LOOP_ITERATIONS) {
+        turnRedLedOn(); // // turn on red led, as red led has been turned on max number of times.
+    } else {
+        long randNumber = random(100);
+        if (randNumber < 50) {
+            turnYellowLedOn();         
+        } else {
+            turnRedLedOn();
+        }
+    }
+    
+}
+
+void turnRedLedOn() {
+    turnLedOn(LED1); 
+    redLightTurnedOnCount += 1; // increase the count of red
+    redLightIsOn = true;
+}
+
+void turnYellowLedOn() {
+    turnLedOn(LED2); 
+    yellowLightTurnedOnCount += 1; // increase the count of yellow
+    yellowLightIsOn = true;
+}
+
 void turnLedOn(int ledNumber) { // when LED x is on
     digitalWrite(ledNumber, HIGH); // then the state of LED x is high
+}
+
+void turnRedOrYellowLightOff() {
+    if (redLightIsOn == true) {
+        turnLedOff(LED1);  
+        redLightIsOn = false;
+    }
+
+    if (yellowLightIsOn == true) {
+        turnLedOff(LED2);  
+        yellowLightIsOn = false;
+    }    
 }
 
 void turnLedOff(int ledNumber) { // when LED x is off
@@ -148,10 +200,7 @@ bool loopHasStarted() {
 
 void printValuesToSerial() {
 
-    if (loopState == NOT_STARTED) {
-        Serial.println("Button 1 has been pressed.");
-    } else if (loopState == PRE_LOOP_WAIT) {
-        Serial.println("Loop has started after pre loop wait");
+    if (loopState == PRE_LOOP_WAIT) {
         Serial.println("Time in millisecs,Red LED value,Yellow LED value,Green LED value,Button 2 value"); // Then these words are printed 
     } else { 
         int redLedValue = digitalRead(LED1); // to read the red LED value from pin 6
@@ -176,8 +225,15 @@ void printValuesToSerial() {
     }
 }
 
-void reset() { // when the system is reset, all LEDs are off 
+void resetLoop() { // when the system is reset, all LEDs are off 
     turnLedOff(LED1);
     turnLedOff(LED2);
     turnLedOff(LED3);  
+
+    loopState = NOT_STARTED;
+    redLightTurnedOnCount = 0;
+    yellowLightTurnedOnCount = 0;    
+    
+    redLightIsOn = false;
+    yellowLightIsOn = false;    
 }
