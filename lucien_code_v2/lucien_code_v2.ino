@@ -33,7 +33,7 @@ const int DELAY_MEDIUM_MILLIS = 4000; // give a delay of 4 seconds
 const int DELAY_LONG_MILLIS = 6000; // give a delay of 6 seconds
 const int MAX_LOOP_ITERATIONS = 5; // the maximum number of repeat in the loop is 5 times
 const int COMPLETE_LOOP_MILLIS = 2 * DELAY_LONG_MILLIS + 2 * DELAY_SHORT_MILLIS;
-const int PRINT_RATE_MILLIS = 2000;
+const int PRINT_RATE_MILLIS = 100;
 
 // Variable definitions:
 int loopCount = 0; // to declare the number of loop
@@ -46,6 +46,8 @@ int greenLightTurnedOnTime = 1; // to declare the timing while LED 3 is on.
 unsigned long buttonOnePressTime = 0;
 unsigned long timeSinceProgramStart = 0;
 unsigned long lastPrintTime = 0;
+unsigned long timeInCurrentLoop = 0;
+unsigned long printCount = 0;
 
 int redLightTurnedOnCount = 0;
 int yellowLightTurnedOnCount = 0;
@@ -76,26 +78,23 @@ void setup() {
 void loop() {
 
     timeSinceProgramStart = millis();
+    printValuesToSerial();
   
     if (buttonIsPressed(BUTTON_1) && loopState == NOT_STARTED) { 
         // if button 1 is pressed and the loop state is 'not started'
-        printValuesToSerial();
+        loopCount = 0; // then the loop count is set to 0
         loopState = PRE_LOOP_WAIT;
         buttonOnePressTime = timeSinceProgramStart;
     }
 
     if (loopState == PRE_LOOP_WAIT && (timeSinceProgramStart - buttonOnePressTime) >= DELAY_LONG_MILLIS) {
-        printValuesToSerial();
-        loopCount = 0; // then the loop count is set to 0
         loopState = LOOP_START; // and the loop is eligible to start
-        currentLoopStartTime = timeSinceProgramStart; // and the current loop start time begins and is set to miliseconds
+        currentLoopStartTime = timeSinceProgramStart; // and the current loop start time begins and is set to miliseconds        
     }
  
     if (loopHasStarted() && loopCount < MAX_LOOP_ITERATIONS) { 
-        printValuesToSerial();
-      
         // if the loop state 'starts' and the number of loop count is less than the max number of loop repeat
-        int timeInCurrentLoop = (timeSinceProgramStart - currentLoopStartTime); // then the time in current loop is calculated from the number of current miliseconds substracted with the miliseconds of the starting loop
+        timeInCurrentLoop = (timeSinceProgramStart - currentLoopStartTime); // then the time in current loop is calculated from the number of current miliseconds substracted with the miliseconds of the starting loop
 
         if (loopState == LOOP_START) {
             turnRedOrYellowLedOn(); // red LED is on
@@ -123,13 +122,9 @@ void loop() {
             currentLoopStartTime = millis(); // and the current loop start time begins again and is set to miliseconds
         }
 
-        if (lastLightWasRed == true) { // Last time a red or yellow light could be turned on, a red light was chosen.
-
+        if (lastLightWasRed == true && greenLightIsOn == false) { // Last time a red or yellow light could be turned on, a red light was chosen.
             if (buttonIsPressed(BUTTON_2)) { // if button 2 is pressed 
-                if ((timeInCurrentLoop <= DELAY_MEDIUM_MILLIS) || // the time in current loop is below 4 seconds
-                        (timeInCurrentLoop >= ((DELAY_SHORT_MILLIS + DELAY_LONG_MILLIS) && timeInCurrentLoop <= (DELAY_SHORT_MILLIS + DELAY_LONG_MILLIS + DELAY_MEDIUM_MILLIS)))
-                    ) { // or between 8 and 12 seconds 
-                    
+                if (isInFirstWindow() || isInSecondWindow()) {
                     turnLedOn(LED3); // green LED is on
                     greenLightIsOn = true; // green LED on is true
                     greenLightTurnedOnTime = timeInCurrentLoop; // the time when green LED is on is now the time in current loop
@@ -210,22 +205,33 @@ bool loopHasStarted() {
    return loopState != NOT_STARTED && loopState != PRE_LOOP_WAIT;  
 }
 
-void printValuesToSerial() {
+bool isInFirstWindow() {
+    // the time in current loop is below 4 seconds
+    return (timeInCurrentLoop <= DELAY_MEDIUM_MILLIS); 
+}
 
-    if (loopState == NOT_STARTED) {
-        Serial.println("Button press"); // Then these words are printed 
-    } else if (loopState == PRE_LOOP_WAIT) {
-        Serial.println("Loop will start");
-        Serial.println("Time in millisecs,Red LED value,Yellow LED value,Green LED value,Button 2 value"); // Then these words are printed 
-    } else { 
+bool isInSecondWindow() {
+     // The time in current loop is between 8 and 12 seconds.
+    return timeInCurrentLoop >= (DELAY_SHORT_MILLIS + DELAY_LONG_MILLIS) && timeInCurrentLoop <= (DELAY_SHORT_MILLIS + DELAY_LONG_MILLIS + DELAY_MEDIUM_MILLIS);
+}
+
+
+void printValuesToSerial() {
+  
+    if (loopState != NOT_STARTED) {
+        if (lastPrintTime == 0) {
+            Serial.println("Time in millisecs,Red LED value,Yellow LED value,Green LED value,Button 2 value"); // Then these words are printed 
+        }
+
         int redLedValue = digitalRead(LED1); // to read the red LED value from pin 6
         int yellowLedValue = digitalRead(LED2); // to read the yellow LED value from pin 5
         int greenLedValue = digitalRead(LED3); // to read the green LED value from pin 4
         int button2Value = digitalRead(BUTTON_2); // to read the button 2 value from pin 2
-    
-        if(lastPrintTime != timeSinceProgramStart && (timeSinceProgramStart % PRINT_RATE_MILLIS) == 0) {
+
+        unsigned long delta = timeSinceProgramStart - lastPrintTime;    
+        if (delta >= PRINT_RATE_MILLIS) {
             Serial.print("\b"); // print \b as it is in python configuration
-            Serial.print(timeSinceProgramStart); // print the time while the loop is running in milliseconds
+            Serial.print(printCount * PRINT_RATE_MILLIS); // print the time while the loop is running in milliseconds
             Serial.print(","); // give a comma
             Serial.print(redLedValue); // print the red LED value
             Serial.print(","); // give a comma
@@ -236,6 +242,7 @@ void printValuesToSerial() {
             Serial.println(button2Value); // print the button 2 value
 
             lastPrintTime = timeSinceProgramStart;
+            printCount += 1;            
         }
     }
 }
@@ -252,4 +259,7 @@ void resetLoop() { // when the system is reset, all LEDs are off
     redLightIsOn = false;
     yellowLightIsOn = false;    
     loopCount = 0;
+
+    lastPrintTime = 0;
+    printCount = 0;
 }
