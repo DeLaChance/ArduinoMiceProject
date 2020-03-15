@@ -49,6 +49,7 @@ unsigned long loopStateTransitionTimes[5] = { 0, 0, 0, 0, 0 };
 
 bool greenLightIsOn = false; // to declare the variable while LED 3 is on
 int greenLightTurnedOnTime = 1; // to declare the timing while LED 3 is on.
+bool button2WasPressed = false;
 
 unsigned long buttonOnePressTime = 0;
 unsigned long timeSinceProgramStart = 0;
@@ -84,7 +85,6 @@ void setup() {
 void loop() {
 
     timeSinceProgramStart = millis();
-    printValuesToSerial();
   
     if (buttonIsPressed(BUTTON_1) && loopState == NOT_STARTED) { 
         // if button 1 is pressed and the loop state is 'not started'
@@ -124,8 +124,12 @@ void loop() {
             startLoopIteration();// start a new loop iteration
         }
 
-        if (lastLightWasRed == true && greenLightIsOn == false) { // Last time a red or yellow light could be turned on, a red light was chosen.
-            if (buttonIsPressed(BUTTON_2)) { // if button 2 is pressed 
+        
+        if (buttonIsPressed(BUTTON_2)) { // if button 2 is pressed 
+            button2WasPressed = true;
+            
+            if (lastLightWasRed == true && greenLightIsOn == false) { // Last time a red or yellow light could be turned on, a red light was chosen.
+              
                 if (isInFirstWindow() || isInSecondWindow()) {
                     turnLedOn(LED3); // green LED is on
                     greenLightIsOn = true; // green LED on is true
@@ -141,6 +145,8 @@ void loop() {
             greenLightTurnedOnTime =  1; // the time when green LED is on goes back to the original
         }
     }
+
+    printValuesToSerial();
 
     if (loopCount == MAX_LOOP_ITERATIONS) { // if the number of loop reaches the maximum number of loop repeat
         resetLoop();
@@ -227,7 +233,12 @@ void printValuesToSerial() {
         int redLedValue = digitalRead(LED1); // to read the red LED value from pin 6
         int yellowLedValue = digitalRead(LED2); // to read the yellow LED value from pin 5
         int greenLedValue = digitalRead(LED3); // to read the green LED value from pin 4
-        int button2Value = digitalRead(BUTTON_2); // to read the button 2 value from pin 2
+        int button2Value;
+        if (button2WasPressed == true) {
+            button2Value = 1;  
+        } else {
+            button2Value = 0;
+        }
 
         unsigned long delta = timeSinceProgramStart - lastPrintTime;    
         if (delta >= PRINT_RATE_MILLIS) {
@@ -243,7 +254,9 @@ void printValuesToSerial() {
             Serial.println(button2Value); // print the button 2 value
 
             lastPrintTime = timeSinceProgramStart;
-            printCount += 1;            
+            printCount += 1;
+                     
+            button2WasPressed = false;
         }
     }
 }
