@@ -31,14 +31,21 @@ const int BUTTON_2 = 2; // input 2
 const int DELAY_SHORT_MILLIS = 2000; // give a delay of 2 seconds
 const int DELAY_MEDIUM_MILLIS = 4000; // give a delay of 4 seconds
 const int DELAY_LONG_MILLIS = 6000; // give a delay of 6 seconds
-const int MAX_LOOP_ITERATIONS = 5; // the maximum number of repeat in the loop is 5 times
+const int MAX_LOOP_ITERATIONS = 2; // the maximum number of repeat in the loop is 5 times
 const int COMPLETE_LOOP_MILLIS = 2 * DELAY_LONG_MILLIS + 2 * DELAY_SHORT_MILLIS;
-const int PRINT_RATE_MILLIS = 100;
+const int PRINT_RATE_MILLIS = 1000;
+
+const int X_DELAY_VALUES[] = { 2000, 3000, 4000 };
+const int Y_DELAY_VALUES[] = { 6000, 7000, 8000 };
 
 // Variable definitions:
-int loopCount = 0; // to declare the number of loop
+int loopCount = -1; // to declare the iteration number of the loop: 0 is first iteration, (n-1)'th is n'th iteration
 unsigned long currentLoopStartTime = 1; // to declare the current loop start time
+unsigned long timeInCurrentLoop = 0;
 LoopState loopState = NOT_STARTED; // to declare the loop state
+
+// loop state transitions at randomly generated times, e.g. 'FIRST_LIGHT_ON' -> 'FIRST_WAIT' may take 4 seconds.
+unsigned long loopStateTransitionTimes[5] = { 0, 0, 0, 0, 0 };
 
 bool greenLightIsOn = false; // to declare the variable while LED 3 is on
 int greenLightTurnedOnTime = 1; // to declare the timing while LED 3 is on.
@@ -46,7 +53,6 @@ int greenLightTurnedOnTime = 1; // to declare the timing while LED 3 is on.
 unsigned long buttonOnePressTime = 0;
 unsigned long timeSinceProgramStart = 0;
 unsigned long lastPrintTime = 0;
-unsigned long timeInCurrentLoop = 0;
 unsigned long printCount = 0;
 
 int redLightTurnedOnCount = 0;
@@ -82,44 +88,40 @@ void loop() {
   
     if (buttonIsPressed(BUTTON_1) && loopState == NOT_STARTED) { 
         // if button 1 is pressed and the loop state is 'not started'
-        loopCount = 0; // then the loop count is set to 0
         loopState = PRE_LOOP_WAIT;
         buttonOnePressTime = timeSinceProgramStart;
     }
 
     if (loopState == PRE_LOOP_WAIT && (timeSinceProgramStart - buttonOnePressTime) >= DELAY_LONG_MILLIS) {
-        loopState = LOOP_START; // and the loop is eligible to start
-        currentLoopStartTime = timeSinceProgramStart; // and the current loop start time begins and is set to miliseconds        
+        startLoopIteration();        
     }
  
-    if (loopHasStarted() && loopCount < MAX_LOOP_ITERATIONS) { 
-        // if the loop state 'starts' and the number of loop count is less than the max number of loop repeat
-        timeInCurrentLoop = (timeSinceProgramStart - currentLoopStartTime); // then the time in current loop is calculated from the number of current miliseconds substracted with the miliseconds of the starting loop
+    if (loopHasStarted() && loopCount < MAX_LOOP_ITERATIONS) { // if the loop state 'starts' and the number of loop count is less than the max number of loop repeat 
+        // then the time in current loop is calculated from the number of current miliseconds substracted with the miliseconds of the starting loop
+        timeInCurrentLoop = (timeSinceProgramStart - currentLoopStartTime); 
 
         if (loopState == LOOP_START) {
-            turnRedOrYellowLedOn(); // red LED is on
-            loopState = FIRST_LIGHT_ON;        
+            turnRedOrYellowLedOn(); 
+            loopState = FIRST_LIGHT_ON; // and the loop state switches to 'first light on'        
         }
 
-        if (loopState == FIRST_LIGHT_ON && timeInCurrentLoop >= DELAY_SHORT_MILLIS) { 
+        if (loopState == FIRST_LIGHT_ON && timeInCurrentLoop >= loopStateTransitionTimes[1]) { 
             turnRedOrYellowLightOff();
-            loopState = FIRST_WAIT; // and the loop state switches to 'first wait'. The first wait lasts for 6 seconds.
+            loopState = FIRST_WAIT; // and the loop state switches to 'first wait'.
         }
 
-        if (loopState == FIRST_WAIT && timeInCurrentLoop >= (DELAY_LONG_MILLIS + DELAY_SHORT_MILLIS)) { // when the loop state is 'first wait' and the time in current loop is bigger than 8 seconds
-            turnRedOrYellowLedOn(); // yellow LED is on
-            loopState = SECOND_LIGHT_ON; // and the loop state switches to 'yellow light on'. The yellow LED is on for 2 seconds
+        if (loopState == FIRST_WAIT && timeInCurrentLoop >= loopStateTransitionTimes[2]) {
+            turnRedOrYellowLedOn(); 
+            loopState = SECOND_LIGHT_ON; // and the loop state switches to 'second light on'
         }
 
-        if (loopState == SECOND_LIGHT_ON && timeInCurrentLoop >= (DELAY_LONG_MILLIS + 2*DELAY_SHORT_MILLIS)) { // when the loop state is 'second light on' and the time in current loop is bigger than 10 seconds
+        if (loopState == SECOND_LIGHT_ON && timeInCurrentLoop >= loopStateTransitionTimes[3]) { 
             turnRedOrYellowLightOff();
-            loopState = SECOND_WAIT;
+            loopState = SECOND_WAIT; // and the loop state switches to 'second wait'
         }
 
-        if (loopState == SECOND_WAIT && timeInCurrentLoop >= COMPLETE_LOOP_MILLIS) { // loop is completed
-            loopCount += 1; // loop count is incremented by +1 (another round of loop starts again).
-            loopState = LOOP_START; // loop goes back to 'first wait' state
-            currentLoopStartTime = millis(); // and the current loop start time begins again and is set to miliseconds
+        if (loopState == SECOND_WAIT && timeInCurrentLoop >= loopStateTransitionTimes[4]) { 
+            startLoopIteration();// start a new loop iteration
         }
 
         if (lastLightWasRed == true && greenLightIsOn == false) { // Last time a red or yellow light could be turned on, a red light was chosen.
@@ -132,12 +134,12 @@ void loop() {
             }
         }
 
-        if (greenLightIsOn == true && (timeInCurrentLoop - greenLightTurnedOnTime) >= DELAY_SHORT_MILLIS) { // when the green LED is on and the time in current loop substracted with the time when green LED is on is bigger than 2 seconds
+        // when the green LED is on and the time in current loop substracted with the time when green LED is on is bigger than 2 seconds
+        if (greenLightIsOn == true && (timeInCurrentLoop - greenLightTurnedOnTime) >= DELAY_SHORT_MILLIS) {
             turnLedOff(LED3); // green LED is off
             greenLightIsOn = false; // green LED on is false
             greenLightTurnedOnTime =  1; // the time when green LED is on goes back to the original
-        }        
-    
+        }
     }
 
     if (loopCount == MAX_LOOP_ITERATIONS) { // if the number of loop reaches the maximum number of loop repeat
@@ -157,10 +159,10 @@ void turnRedOrYellowLedOn() {
     } else if (yellowLightTurnedOnCount == MAX_LOOP_ITERATIONS) {
         turnRedLedOn(); // // turn on red led, as red led has been turned on max number of times.
     } else {
-        long randNumber = random(100);
-        if (randNumber < 50) {
+        long randNumber = random(100); // Value between 0 and (inclusive) 99.
+        if (randNumber < 50) { // 50% chance of yellow
             turnYellowLedOn();         
-        } else {
+        } else { // 50% chance of red
             turnRedLedOn();
         }
     }
@@ -212,9 +214,8 @@ bool isInFirstWindow() {
 
 bool isInSecondWindow() {
      // The time in current loop is between 8 and 12 seconds.
-    return timeInCurrentLoop >= (DELAY_SHORT_MILLIS + DELAY_LONG_MILLIS) && timeInCurrentLoop <= (DELAY_SHORT_MILLIS + DELAY_LONG_MILLIS + DELAY_MEDIUM_MILLIS);
+    return timeInCurrentLoop >= loopStateTransitionTimes[2] && timeInCurrentLoop <= (loopStateTransitionTimes[2] + DELAY_MEDIUM_MILLIS);
 }
-
 
 void printValuesToSerial() {
   
@@ -258,8 +259,39 @@ void resetLoop() { // when the system is reset, all LEDs are off
     
     redLightIsOn = false;
     yellowLightIsOn = false;    
-    loopCount = 0;
+    loopCount = -1;
 
     lastPrintTime = 0;
     printCount = 0;
+}
+
+void startLoopIteration() {
+    
+    loopState = LOOP_START; // and the loop is eligible to start
+    loopCount += 1; // loop count is incremented by +1 (another round of loop starts again).
+
+    currentLoopStartTime = timeSinceProgramStart; // and the current loop start time begins and is set to miliseconds
+
+    // Calculate randomly generated transtion times between loop startes relative to the loop start. Loop start is thus 0.
+    unsigned long firstWaitStartTime = generateRandomXDelay(); // FIRST_WAIT starts at this time
+    unsigned long secondLightOnStartTime = firstWaitStartTime + generateRandomYDelay(); // SECOND_LIGHT starts at this time
+    unsigned long secondWaitStartTime = secondLightOnStartTime + generateRandomXDelay(); // SECOND_WAIT starts at this time
+    unsigned long loopEndTime = secondWaitStartTime + generateRandomYDelay(); // Loop iteration ends at this time
+
+    loopStateTransitionTimes[1] = firstWaitStartTime;
+    loopStateTransitionTimes[2] = secondLightOnStartTime;
+    loopStateTransitionTimes[3] = secondWaitStartTime;
+    loopStateTransitionTimes[4] = loopEndTime;
+}
+
+// X delay is period a light (red or yellow) is turned on
+int generateRandomXDelay() {
+    int randomIndex = random(0, 3); // Value equals 0, 1 or 2. This is because X_DELAY_VALUES has 3 values.
+    return X_DELAY_VALUES[randomIndex]; // index 0 maps to 3000, 1 to 4000 and 2 to 5000.  
+}
+
+// Y delay is a period between a lights being turned on
+int generateRandomYDelay() {
+    int randomIndex = random(0, 3); // Value equals 0, 1 or 2. This is because Y_DELAY_VALUES has 3 values.
+    return Y_DELAY_VALUES[randomIndex];  
 }
