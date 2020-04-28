@@ -21,15 +21,15 @@ def writeSheetToFiles(sheetName, sheetData):
     timeTransformer = lambda t: t * 0.75
     transformedTimeColumn = timeTransformer(timeColumn)
 
-    index = 0
+    runIndex = 0
     for runColumn in sheetData[1:]:
-        index += 1
-        writeRunToFiles(index, sheetName, runColumn, transformedTimeColumn)
+        runIndex += 1
+        writeRunToFiles(runIndex, sheetName, runColumn, transformedTimeColumn)
 
 
-def writeRunToFiles(index, sheetName, runColumn, transformedTimeColumn):
-    index = 0
+def writeRunToFiles(runIndex, sheetName, runColumn, transformedTimeColumn):
     
+    index = 0    
     eventsToTimestamps = [[], [], [], []];
     for value in runColumn: 
         timeValue = transformedTimeColumn[index]
@@ -39,7 +39,7 @@ def writeRunToFiles(index, sheetName, runColumn, transformedTimeColumn):
     print(eventsToTimestamps)
         
     for event in range(1,5):        
-        fileName = "output/" + sheetName + "ses-1_run_" + str(index) + "_" + str(event) + ".txt"
+        fileName = "output/" + sheetName + "_ses-1_run_" + str(runIndex) + "_" + str(event) + ".txt"
         print("Writing to file with fileName: " + fileName)
 
         with open(fileName, "w") as f:
