@@ -1,0 +1,7 @@
+QStandardPaths: XDG_RUNTIME_DIR not set, defaulting to '/data/alirac/39368797.dccn-l029.dccn.nl/runtime-alirac'
+Gtk-Message: 10:24:29.836: GtkDialog mapped without a transient parent. This is discouraged.
+Gtk-Message: 10:25:49.666: GtkDialog mapped without a transient parent. This is discouraged.
+Gtk-Message: 10:26:56.093: GtkDialog mapped without a transient parent. This is discouraged.
+Gtk-Message: 10:28:25.977: GtkDialog mapped without a transient parent. This is discouraged.
+Gtk-Message: 17:30:29.565: GtkDialog mapped without a transient parent. This is discouraged.
+=>> PBS: job killed: walltime 35445 exceeded limit 35400

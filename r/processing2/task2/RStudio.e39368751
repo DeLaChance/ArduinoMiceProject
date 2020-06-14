@@ -1,0 +1,4 @@
+QStandardPaths: XDG_RUNTIME_DIR not set, defaulting to '/data/alirac/39368751.dccn-l029.dccn.nl/runtime-alirac'
+"Uncaught TypeError: Cannot read property 'notifyRCrashed' of undefined"
+/opt/cluster/bin/yadjobinfo: line 89: 16565 Terminated              sleep 1
+awk: (FILENAME=- FNR=1) warning: error writing standard output (Broken pipe)

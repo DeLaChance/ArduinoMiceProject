@@ -1,0 +1,28 @@
+----------------------------------------
+Begin PBS Prologue Wed Jun 10 10:53:31 CEST 2020 1591779211
+Job ID:		   39375139.dccn-l029.dccn.nl
+Username:	   alirac
+Group:		   traaffneu
+Asked resources:   walltime=09:07:00,mem=3gb,nodes=1,neednodes=1
+Queue:		   interactive
+Nodes:		   dccn-c027.dccn.nl
+----------------------------------------
+Limiting memory+swap to 3758096384 bytes ...
+End PBS Prologue Wed Jun 10 10:53:31 CEST 2020 1591779211
+----------------------------------------
+New Walltime: 09:35:47
+Job info started...
+----------------------------------------
+Begin PBS Epilogue Wed Jun 10 17:44:26 CEST 2020 1591803866
+Job ID:		   39375139.dccn-l029.dccn.nl
+Job Exit Code:     0
+Username:	   alirac
+Group:		   traaffneu
+Job Name:	   RStudio
+Session:	   9705
+Asked resources:   walltime=09:07:00,mem=3gb,nodes=1,neednodes=1
+Used resources:	   cput=01:23:32,walltime=06:50:50,mem=722325504b
+Queue:		   interactive
+Nodes:		   dccn-c027.dccn.nl
+End PBS Epilogue Wed Jun 10 17:44:26 CEST 2020 1591803866
+----------------------------------------

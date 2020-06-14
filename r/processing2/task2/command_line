@@ -1,0 +1,73 @@
+fslmeants -i '/project/4180000.18/GnG_awake/preprocessing2/sub-3/ses-1/func/sub-3_ses-1_task-gng_acq-EPI_run-1_bold/filtered_func_data_clean_reg.nii.gz' -o sub-3_ses-1_run-1_timeseries.txt -m '/groupshare/traaffneu/preclinimg/templates/my_templates/mask_200um.nii' --label='/groupshare/traaffneu/preclinimg/templates/my_templates/atlas/ABI_atlas_reduced_200um.nii.gz'
+
+fslmeants -i '/project/4180000.18/GnG_awake/preprocessing2/sub-3/ses-1/func/sub-3_ses-1_task-gng_acq-EPI_run-2_bold/filtered_func_data_clean_reg.nii.gz' -o sub-3_ses-1_run-2_timeseries.txt -m '/groupshare/traaffneu/preclinimg/templates/my_templates/mask_200um.nii' --label='/groupshare/traaffneu/preclinimg/templates/my_templates/atlas/ABI_atlas_reduced_200um.nii.gz'
+
+fslmeants -i '/project/4180000.18/GnG_awake/preprocessing2/sub-3/ses-1/func/sub-3_ses-1_task-gng_acq-EPI_run-3_bold/filtered_func_data_clean_reg.nii.gz' -o sub-3_ses-1_run-3_timeseries.txt -m '/groupshare/traaffneu/preclinimg/templates/my_templates/mask_200um.nii' --label='/groupshare/traaffneu/preclinimg/templates/my_templates/atlas/ABI_atlas_reduced_200um.nii.gz'
+
+fslmeants -i '/project/4180000.18/GnG_awake/preprocessing2/sub-3/ses-1/func/sub-3_ses-1_task-gng_acq-EPI_run-4_bold/filtered_func_data_clean_reg.nii.gz' -o sub-3_ses-1_run-4_timeseries.txt -m '/groupshare/traaffneu/preclinimg/templates/my_templates/mask_200um.nii' --label='/groupshare/traaffneu/preclinimg/templates/my_templates/atlas/ABI_atlas_reduced_200um.nii.gz'
+
+fslmeants -i '/project/4180000.18/GnG_awake/preprocessing2/sub-3/ses-1/func/sub-3_ses-1_task-gng_acq-EPI_run-5_bold/filtered_func_data_clean_reg.nii.gz' -o sub-3_ses-1_run-5_timeseries.txt -m '/groupshare/traaffneu/preclinimg/templates/my_templates/mask_200um.nii' --label='/groupshare/traaffneu/preclinimg/templates/my_templates/atlas/ABI_atlas_reduced_200um.nii.gz'
+
+fslmeants -i '/project/4180000.18/GnG_awake/preprocessing2/sub-4/ses-1/func/sub-4_ses-1_task-gng_acq-EPI_run-1_bold/filtered_func_data_clean_reg.nii.gz' -o sub-4_ses-1_run-1_timeseries.txt -m '/groupshare/traaffneu/preclinimg/templates/my_templates/mask_200um.nii' --label='/groupshare/traaffneu/preclinimg/templates/my_templates/atlas/ABI_atlas_reduced_200um.nii.gz'
+
+fslmeants -i '/project/4180000.18/GnG_awake/preprocessing2/sub-4/ses-1/func/sub-4_ses-1_task-gng_acq-EPI_run-2_bold/filtered_func_data_clean_reg.nii.gz' -o sub-4_ses-1_run-2_timeseries.txt -m '/groupshare/traaffneu/preclinimg/templates/my_templates/mask_200um.nii' --label='/groupshare/traaffneu/preclinimg/templates/my_templates/atlas/ABI_atlas_reduced_200um.nii.gz'
+
+fslmeants -i '/project/4180000.18/GnG_awake/preprocessing2/sub-4/ses-1/func/sub-4_ses-1_task-gng_acq-EPI_run-3_bold/filtered_func_data_clean_reg.nii.gz' -o sub-4_ses-1_run-3_timeseries.txt -m '/groupshare/traaffneu/preclinimg/templates/my_templates/mask_200um.nii' --label='/groupshare/traaffneu/preclinimg/templates/my_templates/atlas/ABI_atlas_reduced_200um.nii.gz'
+
+fslmeants -i '/project/4180000.18/GnG_awake/preprocessing2/sub-4/ses-1/func/sub-4_ses-1_task-gng_acq-EPI_run-4_bold/filtered_func_data_clean_reg.nii.gz' -o sub-4_ses-1_run-4_timeseries.txt -m '/groupshare/traaffneu/preclinimg/templates/my_templates/mask_200um.nii' --label='/groupshare/traaffneu/preclinimg/templates/my_templates/atlas/ABI_atlas_reduced_200um.nii.gz'
+
+fslmeants -i '/project/4180000.18/GnG_awake/preprocessing2/sub-4/ses-1/func/sub-4_ses-1_task-gng_acq-EPI_run-5_bold/filtered_func_data_clean_reg.nii.gz' -o sub-4_ses-1_run-5_timeseries.txt -m '/groupshare/traaffneu/preclinimg/templates/my_templates/mask_200um.nii' --label='/groupshare/traaffneu/preclinimg/templates/my_templates/atlas/ABI_atlas_reduced_200um.nii.gz'
+
+fslmeants -i '/project/4180000.18/GnG_awake/preprocessing2/sub-4/ses-1/func/sub-4_ses-1_task-gng_acq-EPI_run-6_bold/filtered_func_data_clean_reg.nii.gz' -o sub-4_ses-1_run-6_timeseries.txt -m '/groupshare/traaffneu/preclinimg/templates/my_templates/mask_200um.nii' --label='/groupshare/traaffneu/preclinimg/templates/my_templates/atlas/ABI_atlas_reduced_200um.nii.gz'
+
+fslmeants -i '/project/4180000.18/GnG_awake/preprocessing2/sub-4/ses-1/func/sub-4_ses-1_task-gng_acq-EPI_run-7_bold/filtered_func_data_clean_reg.nii.gz' -o sub-4_ses-1_run-7_timeseries.txt -m '/groupshare/traaffneu/preclinimg/templates/my_templates/mask_200um.nii' --label='/groupshare/traaffneu/preclinimg/templates/my_templates/atlas/ABI_atlas_reduced_200um.nii.gz'
+
+fslmeants -i '/project/4180000.18/GnG_awake/preprocessing2/sub-4/ses-1/func/sub-4_ses-1_task-gng_acq-EPI_run-8_bold/filtered_func_data_clean_reg.nii.gz' -o sub-4_ses-1_run-8_timeseries.txt -m '/groupshare/traaffneu/preclinimg/templates/my_templates/mask_200um.nii' --label='/groupshare/traaffneu/preclinimg/templates/my_templates/atlas/ABI_atlas_reduced_200um.nii.gz'
+
+fslmeants -i '/project/4180000.18/GnG_awake/preprocessing2/sub-4/ses-1/func/sub-4_ses-1_task-gng_acq-EPI_run-9_bold/filtered_func_data_clean_reg.nii.gz' -o sub-4_ses-1_run-9_timeseries.txt -m '/groupshare/traaffneu/preclinimg/templates/my_templates/mask_200um.nii' --label='/groupshare/traaffneu/preclinimg/templates/my_templates/atlas/ABI_atlas_reduced_200um.nii.gz'
+
+fslmeants -i '/project/4180000.18/GnG_awake/preprocessing2/sub-5/ses-1/func/sub-5_ses-1_task-gng_acq-EPI_run-1_bold/filtered_func_data_clean_reg.nii.gz' -o sub-5_ses-1_run-1_timeseries.txt -m '/groupshare/traaffneu/preclinimg/templates/my_templates/mask_200um.nii' --label='/groupshare/traaffneu/preclinimg/templates/my_templates/atlas/ABI_atlas_reduced_200um.nii.gz'
+
+fslmeants -i '/project/4180000.18/GnG_awake/preprocessing2/sub-6/ses-1/func/sub-6_ses-1_task-gng_acq-EPI_run-1_bold/filtered_func_data_clean_reg.nii.gz' -o sub-6_ses-1_run-1_timeseries.txt -m '/groupshare/traaffneu/preclinimg/templates/my_templates/mask_200um.nii' --label='/groupshare/traaffneu/preclinimg/templates/my_templates/atlas/ABI_atlas_reduced_200um.nii.gz'
+
+fslmeants -i '/project/4180000.18/GnG_awake/preprocessing2/sub-6/ses-1/func/sub-6_ses-1_task-gng_acq-EPI_run-2_bold/filtered_func_data_clean_reg.nii.gz' -o sub-6_ses-1_run-2_timeseries.txt -m '/groupshare/traaffneu/preclinimg/templates/my_templates/mask_200um.nii' --label='/groupshare/traaffneu/preclinimg/templates/my_templates/atlas/ABI_atlas_reduced_200um.nii.gz'
+
+fslmeants -i '/project/4180000.18/GnG_awake/preprocessing2/sub-6/ses-1/func/sub-6_ses-1_task-gng_acq-EPI_run-3_bold/filtered_func_data_clean_reg.nii.gz' -o sub-6_ses-1_run-3_timeseries.txt -m '/groupshare/traaffneu/preclinimg/templates/my_templates/mask_200um.nii' --label='/groupshare/traaffneu/preclinimg/templates/my_templates/atlas/ABI_atlas_reduced_200um.nii.gz'
+
+fslmeants -i '/project/4180000.18/GnG_awake/preprocessing2/sub-6/ses-1/func/sub-6_ses-1_task-gng_acq-EPI_run-4_bold/filtered_func_data_clean_reg.nii.gz' -o sub-6_ses-1_run-4_timeseries.txt -m '/groupshare/traaffneu/preclinimg/templates/my_templates/mask_200um.nii' --label='/groupshare/traaffneu/preclinimg/templates/my_templates/atlas/ABI_atlas_reduced_200um.nii.gz'
+
+fslmeants -i '/project/4180000.18/GnG_awake/preprocessing2/sub-6/ses-1/func/sub-6_ses-1_task-gng_acq-EPI_run-5_bold/filtered_func_data_clean_reg.nii.gz' -o sub-6_ses-1_run-5_timeseries.txt -m '/groupshare/traaffneu/preclinimg/templates/my_templates/mask_200um.nii' --label='/groupshare/traaffneu/preclinimg/templates/my_templates/atlas/ABI_atlas_reduced_200um.nii.gz'
+
+fslmeants -i '/project/4180000.18/GnG_awake/preprocessing2/sub-6/ses-1/func/sub-6_ses-1_task-gng_acq-EPI_run-6_bold/filtered_func_data_clean_reg.nii.gz' -o sub-6_ses-1_run-6_timeseries.txt -m '/groupshare/traaffneu/preclinimg/templates/my_templates/mask_200um.nii' --label='/groupshare/traaffneu/preclinimg/templates/my_templates/atlas/ABI_atlas_reduced_200um.nii.gz'
+
+fslmeants -i '/project/4180000.18/GnG_awake/preprocessing2/sub-6/ses-1/func/sub-6_ses-1_task-gng_acq-EPI_run-7_bold/filtered_func_data_clean_reg.nii.gz' -o sub-6_ses-1_run-7_timeseries.txt -m '/groupshare/traaffneu/preclinimg/templates/my_templates/mask_200um.nii' --label='/groupshare/traaffneu/preclinimg/templates/my_templates/atlas/ABI_atlas_reduced_200um.nii.gz'
+
+fslmeants -i '/project/4180000.18/GnG_awake/preprocessing2/sub-6/ses-1/func/sub-6_ses-1_task-gng_acq-EPI_run-8_bold/filtered_func_data_clean_reg.nii.gz' -o sub-6_ses-1_run-8_timeseries.txt -m '/groupshare/traaffneu/preclinimg/templates/my_templates/mask_200um.nii' --label='/groupshare/traaffneu/preclinimg/templates/my_templates/atlas/ABI_atlas_reduced_200um.nii.gz'
+
+fslmeants -i '/project/4180000.18/GnG_awake/preprocessing2/sub-6/ses-1/func/sub-6_ses-1_task-gng_acq-EPI_run-9_bold/filtered_func_data_clean_reg.nii.gz' -o sub-6_ses-1_run-9_timeseries.txt -m '/groupshare/traaffneu/preclinimg/templates/my_templates/mask_200um.nii' --label='/groupshare/traaffneu/preclinimg/templates/my_templates/atlas/ABI_atlas_reduced_200um.nii.gz'
+
+fslmeants -i '/project/4180000.18/GnG_awake/preprocessing2/sub-7/ses-1/func/sub-7_ses-1_task-gng_acq-EPI_run-1_bold/filtered_func_data_clean_reg.nii.gz' -o sub-7_ses-1_run-1_timeseries.txt -m '/groupshare/traaffneu/preclinimg/templates/my_templates/mask_200um.nii' --label='/groupshare/traaffneu/preclinimg/templates/my_templates/atlas/ABI_atlas_reduced_200um.nii.gz'
+
+fslmeants -i '/project/4180000.18/GnG_awake/preprocessing2/sub-7/ses-1/func/sub-7_ses-1_task-gng_acq-EPI_run-2_bold/filtered_func_data_clean_reg.nii.gz' -o sub-7_ses-1_run-2_timeseries.txt -m '/groupshare/traaffneu/preclinimg/templates/my_templates/mask_200um.nii' --label='/groupshare/traaffneu/preclinimg/templates/my_templates/atlas/ABI_atlas_reduced_200um.nii.gz'
+
+fslmeants -i '/project/4180000.18/GnG_awake/preprocessing2/sub-7/ses-1/func/sub-7_ses-1_task-gng_acq-EPI_run-3_bold/filtered_func_data_clean_reg.nii.gz' -o sub-7_ses-1_run-3_timeseries.txt -m '/groupshare/traaffneu/preclinimg/templates/my_templates/mask_200um.nii' --label='/groupshare/traaffneu/preclinimg/templates/my_templates/atlas/ABI_atlas_reduced_200um.nii.gz'
+
+fslmeants -i '/project/4180000.18/GnG_awake/preprocessing2/sub-7/ses-1/func/sub-7_ses-1_task-gng_acq-EPI_run-4_bold/filtered_func_data_clean_reg.nii.gz' -o sub-7_ses-1_run-4_timeseries.txt -m '/groupshare/traaffneu/preclinimg/templates/my_templates/mask_200um.nii' --label='/groupshare/traaffneu/preclinimg/templates/my_templates/atlas/ABI_atlas_reduced_200um.nii.gz'
+
+fslmeants -i '/project/4180000.18/GnG_awake/preprocessing2/sub-7/ses-1/func/sub-7_ses-1_task-gng_acq-EPI_run-5_bold/filtered_func_data_clean_reg.nii.gz' -o sub-7_ses-1_run-5_timeseries.txt -m '/groupshare/traaffneu/preclinimg/templates/my_templates/mask_200um.nii' --label='/groupshare/traaffneu/preclinimg/templates/my_templates/atlas/ABI_atlas_reduced_200um.nii.gz'
+
+fslmeants -i '/project/4180000.18/GnG_awake/preprocessing2/sub-7/ses-1/func/sub-7_ses-1_task-gng_acq-EPI_run-6_bold/filtered_func_data_clean_reg.nii.gz' -o sub-7_ses-1_run-6_timeseries.txt -m '/groupshare/traaffneu/preclinimg/templates/my_templates/mask_200um.nii' --label='/groupshare/traaffneu/preclinimg/templates/my_templates/atlas/ABI_atlas_reduced_200um.nii.gz'
+
+fslmeants -i '/project/4180000.18/GnG_awake/preprocessing2/sub-7/ses-1/func/sub-7_ses-1_task-gng_acq-EPI_run-7_bold/filtered_func_data_clean_reg.nii.gz' -o sub-7_ses-1_run-7_timeseries.txt -m '/groupshare/traaffneu/preclinimg/templates/my_templates/mask_200um.nii' --label='/groupshare/traaffneu/preclinimg/templates/my_templates/atlas/ABI_atlas_reduced_200um.nii.gz'
+
+fslmeants -i '/project/4180000.18/GnG_awake/preprocessing2/sub-7/ses-1/func/sub-7_ses-1_task-gng_acq-EPI_run-8_bold/filtered_func_data_clean_reg.nii.gz' -o sub-7_ses-1_run-8_timeseries.txt -m '/groupshare/traaffneu/preclinimg/templates/my_templates/mask_200um.nii' --label='/groupshare/traaffneu/preclinimg/templates/my_templates/atlas/ABI_atlas_reduced_200um.nii.gz'
+
+fslmeants -i '/project/4180000.18/GnG_awake/preprocessing2/sub-7/ses-1/func/sub-7_ses-1_task-gng_acq-EPI_run-9_bold/filtered_func_data_clean_reg.nii.gz' -o sub-7_ses-1_run-9_timeseries.txt -m '/groupshare/traaffneu/preclinimg/templates/my_templates/mask_200um.nii' --label='/groupshare/traaffneu/preclinimg/templates/my_templates/atlas/ABI_atlas_reduced_200um.nii.gz'
+
+16,PL,Prelimbic area,left,isoctx
+52,PL,Prelimbic area,right,isoctx
+19,AI,Agranular insular area,left,isoctx
+55,AI,Agranular insular area,right,isoctx
+28,CP,Caudoputamen,left,STR
+64,CP,Caudoputamen,right,STR
+
