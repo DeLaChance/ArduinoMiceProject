@@ -1,12 +1,36 @@
-TIME_SERIES_ROOT_DIR <- "/project/4180000.18/GnG_awake/processing2/task2/"
-TXT_ROOT_DIR <- "/project/4180000.18/GnG_awake/fls_3-column_file/bids2/"
+TIME_SERIES_ROOT_DIR <- "C:\\\\Users\\User\\Documents\\Projects\\ArduinoMiceProject\\r\\processing2\\task2\\"
+TXT_ROOT_DIR <- "C:\\\\Users\\User\\Documents\\Projects\\ArduinoMiceProject\\r\\bids-2\\"
 
 writeToCsv <- function(subject, session, run, event) {
 
-	## Read the timseries (.txt) as a table in R
-	timeSeriesFileName <- sprintf("%ssub-%s/ses-%s/sub-%s_ses-%s_task-gng_acq-EPI_run-%s_bold/sub-%s_ses-%s_run-%s_timeseries.txt",
-      	TIME_SERIES_ROOT_DIR, subject, session, subject, session, run, subject, session, run)
-    print(sprintf("Timeseries file name is in %s", timeSeriesFileName))
+	## Read the glm.design (.txt) as a table in R
+	txtFileName <- sprintf("%ssub-%s\\ses-%s\\sub-%s_ses-%s_run_%s_%s.txt", TXT_ROOT_DIR,
+		subject, session, subject, session, run, event)
+
+	# Read the timseries (.txt) as a table in R
+	timeSeriesFileName <- sprintf("%ssub-%s\\ses-%s\\sub-%s_ses-%s_task-gng_acq-EPI_run-%s_bold\\sub-%s_ses-%s_run-%s_timeseries.txt",
+		TIME_SERIES_ROOT_DIR, subject, session, subject, session, run, subject, session, run)
+
+	if (file.exists(timeSeriesFileName) && file.exists(txtFileName)) {
+		print(sprintf("Txt file name is in %s", txtFileName))
+	    print(sprintf("Timeseries file name is in %s", timeSeriesFileName))
+
+		final_table <- readData(txtFileName, timeSeriesFileName)
+
+		## Export the data frame to a .csv file
+		# outputFileName <- sprintf("%ssub-%s_ses-%s_run-%s_%s_prelimbic_area.csv", TIME_SERIES_ROOT_DIR, subject, session, run, event)
+		# print(sprintf("Output file is '%s'", outputFileName))
+		# write.table(final_table, file = outputFileName, sep = ",", row.names = FALSE, col.names = FALSE)
+
+		final_table
+	} else {
+		c()
+	}
+}
+
+readData <- function(txtFileName, timeSeriesFileName) {
+
+	design <- read.table(txtFileName, quote="\"", comment.char="")
 	timeseries <- read.table(timeSeriesFileName, quote="\"", comment.char="")
 
 	## Create an extra column in the beginning to indicate time in seconds
@@ -22,12 +46,6 @@ writeToCsv <- function(subject, session, run, event) {
 
 	## Create the column names
 	colnames(regions_of_interest) <- c("Time in seconds","Prelimbic area","Agranular insular area","Caudoputamen")
-
-	## Read the glm.design (.txt) as a table in R
-	txtFileName <- sprintf("%ssub-%s/ses-%s/sub-%s_ses-%s_run_%s_%s.txt", TXT_ROOT_DIR,
-		subject, session, subject, session, run, event)
-    print(sprintf("Txt file name is in %s", txtFileName))
-	design <- read.table(txtFileName, quote="\"", comment.char="")
 
 	## Create the column names
 	colnames(design) <- c("Time in seconds","Duration of event","Standard magnitude")
@@ -58,39 +76,54 @@ writeToCsv <- function(subject, session, run, event) {
 	after_event_2 <- merge(regions_of_interest,upper_bound_second_values, by = "Time in seconds")
 	after_event_2 <- t(after_event_2)
 
-	## Extract the signal only from the prelimbic area
+	## Extract the signals only from the prelimbic area and average the signals across all events
+	mean_before_event_2 <- matrix(mean(before_event_2[c(2), ]))
+	mean_before_event_1 <- matrix(mean(before_event_1[c(2), ]))
+	mean_during_event <- matrix(mean(during_event[c(2), ]))
+	mean_after_event_1 <- matrix(mean(after_event_1[c(2), ]))
+	mean_after_event_2 <- matrix(mean(after_event_2[c(2), ]))
 
-	first_event <- cbind((before_event_2[2,1]),(before_event_1[2,1]),(during_event[2,1]),(after_event_1[2,1]),(after_event_2[2,1]))
-	second_event <- cbind((before_event_2[2,2]),(before_event_1[2,2]),(during_event[2,2]),(after_event_1[2,2]),(after_event_2[2,2]))
-	third_event <- cbind((before_event_2[2,3]),(before_event_1[2,3]),(during_event[2,3]),(after_event_1[2,3]),(after_event_2[2,3]))
-	hits <- rbind(first_event,second_event,third_event)
-	rownames(hits) <- c("event 1", "event 2", "event 3")
-
-	## Export the data frame to a .csv file
-	setwd(TIME_SERIES_ROOT_DIR)
-	outputFileName <- sprintf("sub-%s_ses-%s_run-%s_%s.csv", subject, session, run, event)
-	print(sprintf("Output file is '%s'", outputFileName))
-	write.table(hits, file = outputFileName, sep = ",", row.names = FALSE, col.names = FALSE)
+	final_table <- cbind(mean_before_event_2, mean_before_event_1, mean_during_event, mean_after_event_1, mean_after_event_2)
+	final_table
 }
 
 printOnly <- function(subject, session, run, event) {
-  timeSeriesFileName <- sprintf("%ssub-%s/ses-%s/sub-%s_ses-%s_task-gng_acq-EPI_run-%s_bold/sub-%s_ses-%s_run-%s_timeseries.txt",
-	TIME_SERIES_ROOT_DIR, subject, session, subject, session, run, subject, session, run)
-  print(sprintf("Timeseries file name is in %s", timeSeriesFileName))
 
-  txtFileName <- sprintf("%ssub-%s/ses-%s/sub-%s_ses-%s_run_%s_%s.txt", TXT_ROOT_DIR,     subject, session, subject, session, run, event)
-  print(sprintf("Txt file name is in %s", txtFileName))
+	## Read the glm.design (.txt) as a table in R
+	txtFileName <- sprintf("%ssub-%s\\ses-%s\\sub-%s_ses-%s_run_%s_%s.txt", TXT_ROOT_DIR,
+		subject, session, subject, session, run, event)
+	if (file.exists(timeSeriesFileName)) {
+		print(sprintf("Txt file name is in %s", txtFileName))
+	} else {
+		print(sprintf("Txt file name is in %s, but does not exist. So skipping...", txtFileName))
+	}
 
-  outputFileName <- sprintf("sub-%s_ses-%s_run-%s_%s.csv", subject, session, run, event)
-  print(sprintf("Output file is '%s'", outputFileName))
+	# Read the timseries (.txt) as a table in R
+	timeSeriesFileName <- sprintf("%ssub-%s\\ses-%s\\sub-%s_ses-%s_task-gng_acq-EPI_run-%s_bold\\sub-%s_ses-%s_run-%s_timeseries.txt",
+		TIME_SERIES_ROOT_DIR, subject, session, subject, session, run, subject, session, run)
+	if (file.exists(timeSeriesFileName)) {
+		print(sprintf("Timeseries file name is in %s", timeSeriesFileName))
+	} else {
+		print(sprintf("Timeseries file name is %s, but does not exist. So skipping...", timeSeriesFileName))
+	}
+
+	outputFileName <- sprintf("sub-%s_ses-%s_run-%s_%s_prelimbic_area.csv", subject, session, run, event)
+	print(sprintf("Output file is '%s'", outputFileName))
 }
 
-for (subject in 3:3) {
-	for (session in 1:1) {
-		for (run in 1:5) {
-			for (event in 1:4) {
-				printOnly(subject, session, run, event)
-				#writeToCsv(subject, session, run, event)
+
+for (event in 1:4) {
+
+	outputFileName <- sprintf("%s_prelimbic_area.csv", event)
+	print(sprintf("Output file is '%s'", outputFileName))
+
+	for (subject in 3:7) {
+		for (session in 1:1) {
+			for (run in 1:9) {
+				newData <- writeToCsv(subject, session, run, event)
+				if (length(newData) > 0 && !is.na(newData)) {
+					write.table(newData, file = outputFileName, sep = ",", row.names = FALSE, col.names = FALSE, append=TRUE)
+				}
 			}
 		}
 	}
